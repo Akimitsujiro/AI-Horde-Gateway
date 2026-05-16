@@ -52,7 +52,7 @@ Nhờ có Gateway này, bạn có thể trải nghiệm hàng trăm mô hình ng
 Giữ cho cửa sổ dòng lệnh của Gateway luôn chạy nền, sau đó thiết lập trên JanitorAI:
 
 1. Mở một đoạn chat trên JanitorAI và bấm vào biểu tượng **API Settings** (Góc trên bên phải).
-2. Chọn **Custom** hoặc **OpenAI Proxy**.
+2. Chọn **Proxy** -> **New**.
 3. **Proxy URL:** 
    ```text
    http://localhost:3000/v1/chat/completions
@@ -64,8 +64,8 @@ Giữ cho cửa sổ dòng lệnh của Gateway luôn chạy nền, sau đó thi
    > **Lưu ý quan trọng:** Đây là mã ẩn danh mặc định của AI Horde. Bạn bắt buộc phải nhập mã này (hoặc bất kỳ ký tự nào) vì JanitorAI không cho phép để trống ô này. Để tốc độ phản hồi nhanh gấp nhiều lần, hãy đăng ký tài khoản tại [AI Horde](https://stablehorde.net/) để lấy API Key cá nhân và tích lũy Kudos!
 5. **Model:** 
    - Gõ `Any` để AI Horde tự tìm máy chủ phản hồi nhanh nhất.
-   - Hoặc dán một Model ID cụ thể (VD: `koboldcpp/Artemis-31B-v1b`).
-6. **Save Settings** và bắt đầu trò chuyện!
+   - Hoặc dán một Model ID cụ thể từ [mạng lưới AI Horde](https://aihorde.net/details/models/text) (VD: `koboldcpp/Artemis-31B-v1b`).
+6. Bấm **Add** sau đó **Save**, và bắt đầu trò chuyện!
 
 *(⚠️ **ĐẶC BIỆT LƯU Ý:** Phải **TẮT** chế độ "Stream" trong cài đặt JanitorAI vì AI Horde yêu cầu trả về toàn bộ chữ một lần).*
 

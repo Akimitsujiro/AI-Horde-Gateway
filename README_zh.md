@@ -52,7 +52,7 @@
 保持网关在后台运行，然后设置 JanitorAI：
 
 1. 在 JanitorAI 中打开一个聊天，然后单击 **API Settings**（右上角）。
-2. 选择 **Custom** 或 **OpenAI Proxy**。
+2. 选择 **Proxy** -> **New**。
 3. **Proxy URL:** 
    ```text
    http://localhost:3000/v1/chat/completions
@@ -64,8 +64,8 @@
    > **注意:** 这是 AI Horde 需要的默认匿名密钥。如果此字段为空，JanitorAI 会在前端阻止发送请求。为了获得更快的响应时间，请在 [AI Horde](https://stablehorde.net/) 注册以获取您自己的 API 密钥并赚取 Kudos！
 5. **Model:** 
    - 输入 `Any` 让网络选择最快的可用模型。
-   - 或者，指定 AI Horde 网络中确切的模型 ID（例如 `koboldcpp/Artemis-31B-v1b`）。
-6. **Save Settings** (保存设置) 并开始聊天！
+   - 或者，指定 [AI Horde 网络](https://aihorde.net/details/models/text) 中确切的模型 ID（例如 `koboldcpp/Artemis-31B-v1b`）。
+6. 点击 **Add** 然后 **Save**，开始聊天！
 
 *（⚠️ **严重警告:** 确保在 JanitorAI 设置中将“Stream”转为 **OFF**，因为 AI Horde 依赖于全文异步返回）。*
 

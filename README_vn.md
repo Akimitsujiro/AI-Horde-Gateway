@@ -30,7 +30,7 @@ Nhờ có Gateway này, bạn có thể trải nghiệm hàng trăm mô hình ng
 ## ⚙️ Yêu cầu hệ thống
 
 - **[Node.js](https://nodejs.org/en/download/)** (Phiên bản v18 trở lên).
-- **Git** (Tùy chọn, dùng để tải và cập nhật code nhanh).
+- **[Git](https://git-scm.com/)** (Tùy chọn, dùng để tải và cập nhật code nhanh).
 
 ## 🚀 Cài đặt & Khởi chạy
 

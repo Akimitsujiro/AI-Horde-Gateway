@@ -30,7 +30,7 @@
 ## ⚙️ 运行前提
 
 - **[Node.js](https://nodejs.org/en/download/)** (推荐 v18 或更新版本)。
-- **Git** (可选，用于轻松克隆和更新)。
+- **[Git](https://git-scm.com/)** (可选，用于轻松克隆和更新)。
 
 ## 🚀 安装与设置
 

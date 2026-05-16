@@ -30,7 +30,7 @@ With this gateway, you can enjoy hundreds of powerful AI models entirely for **f
 ## ⚙️ Prerequisites
 
 - **[Node.js](https://nodejs.org/en/download/)** (v18 or newer recommended).
-- **Git** (Optional, for easy cloning and updates).
+- **[Git](https://git-scm.com/)** (Optional, for easy cloning and updates).
 
 ## 🚀 Installation & Setup
 

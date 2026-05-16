@@ -52,7 +52,7 @@ With this gateway, you can enjoy hundreds of powerful AI models entirely for **f
 Keep the gateway running in the background, then set up JanitorAI:
 
 1. Open a chat in JanitorAI and click the **API Settings** (top right).
-2. Select **Custom** or **OpenAI Proxy**.
+2. Select **Proxy** -> **New**.
 3. **Proxy URL:** 
    ```text
    http://localhost:3000/v1/chat/completions
@@ -64,8 +64,8 @@ Keep the gateway running in the background, then set up JanitorAI:
    > **Note:** This is the default anonymous key required by AI Horde. JanitorAI will block the proxy if this field is empty. For much faster response times, register at [AI Horde](https://stablehorde.net/) to get your own API Key and earn Kudos!
 5. **Model:** 
    - Type `Any` to let the network pick the fastest available model.
-   - Or, specify an exact Model ID from the AI Horde network (e.g., `koboldcpp/Artemis-31B-v1b`).
-6. **Save Settings** and start chatting!
+   - Or, specify an exact Model ID from the [AI Horde network](https://aihorde.net/details/models/text) (e.g., `koboldcpp/Artemis-31B-v1b`).
+6. **Add** and **Save**, start chatting!
 
 *(⚠️ **CRITICAL:** Make sure "Stream" is turned **OFF** in JanitorAI settings as AI Horde relies on full-text asynchronous returns).*
 

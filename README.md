@@ -37,8 +37,8 @@ With this gateway, you can enjoy hundreds of powerful AI models entirely for **f
 1. **Download the Repository**
    Using Git:
    ```bash
-   git clone https://github.com/YOUR_GITHUB_USERNAME/aihorde-janitor-gateway.git
-   cd aihorde-janitor-gateway
+   git clone https://github.com/Akimitsujiro/AI-Horde-Gateway.git
+   cd AI-Horde-Gateway
    ```
    *(Alternatively, download the repository as a ZIP file from GitHub and extract it).*
 

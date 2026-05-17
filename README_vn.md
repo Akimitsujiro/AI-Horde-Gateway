@@ -37,8 +37,8 @@ Nhờ có Gateway này, bạn có thể trải nghiệm hàng trăm mô hình ng
 1. **Tải mã nguồn**
    Nếu dùng Git, chạy lệnh sau:
    ```bash
-   git clone https://github.com/YOUR_GITHUB_USERNAME/aihorde-janitor-gateway.git
-   cd aihorde-janitor-gateway
+   git clone https://github.com/Akimitsujiro/AI-Horde-Gateway.git
+   cd AI-Horde-Gateway
    ```
    *(Hoặc bạn có thể tải file ZIP từ GitHub về và giải nén).*
 

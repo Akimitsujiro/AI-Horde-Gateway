@@ -37,8 +37,8 @@
 1. **下载项目代码库**
    使用 Git:
    ```bash
-   git clone https://github.com/YOUR_GITHUB_USERNAME/aihorde-janitor-gateway.git
-   cd aihorde-janitor-gateway
+   git clone https://github.com/Akimitsujiro/AI-Horde-Gateway.git
+   cd AI-Horde-Gateway
    ```
    *（或者，也可以从 GitHub 将代码库下载为 ZIP 文件并解压）。*
 

@@ -16,10 +16,11 @@ app.use((req, res, next) => {
 // Mock /v1/models endpoint for clients that check it
 app.get('/v1/models', (req, res) => {
     const isOpenRouter = process.env.GATEWAY_SERVICE === 'openrouter';
+    const orModel = process.env.OPENROUTER_MODEL || "openrouter-model";
     res.json({
         object: "list",
         data: [{
-            id: isOpenRouter ? "openrouter-model" : "aihorde-model",
+            id: isOpenRouter ? orModel : "aihorde-model",
             object: "model",
             created: Date.now(),
             owned_by: isOpenRouter ? "openrouter" : "aihorde"
@@ -62,10 +63,13 @@ const chatHandler = async (req, res) => {
         if (isOpenRouter) {
             console.log(`[REQ] Forwarding to OpenRouter API`);
 
-            // Allow OpenRouter model fallback if it's not set or set to 'Any'
-            let orModel = req.body.model;
-            if (!orModel || orModel.toLowerCase() === 'any') {
-                orModel = 'openrouter/auto';
+            // Prioritize environment variable if set, otherwise fallback to request body or default
+            let orModel = process.env.OPENROUTER_MODEL;
+            if (!orModel) {
+                orModel = req.body.model;
+                if (!orModel || orModel.toLowerCase() === 'any') {
+                    orModel = 'openrouter/auto';
+                }
             }
 
             const openRouterPayload = { ...req.body, model: orModel };

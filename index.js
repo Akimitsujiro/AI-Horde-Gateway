@@ -15,15 +15,23 @@ app.use((req, res, next) => {
 
 // Mock /v1/models endpoint for clients that check it
 app.get('/v1/models', (req, res) => {
+    const isOpenRouter = process.env.GATEWAY_SERVICE === 'openrouter';
     res.json({
         object: "list",
-        data: [{ id: "aihorde-model", object: "model", created: Date.now(), owned_by: "aihorde" }]
+        data: [{
+            id: isOpenRouter ? "openrouter-model" : "aihorde-model",
+            object: "model",
+            created: Date.now(),
+            owned_by: isOpenRouter ? "openrouter" : "aihorde"
+        }]
     });
 });
 
 const PORT = process.env.PORT || 3000;
 const AI_HORDE_BASE_URL = 'https://stablehorde.net/api/v2';
 const DEFAULT_API_KEY = process.env.AI_HORDE_API_KEY || '0000000000';
+const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '';
 
 // Convert OpenAI messages to a single prompt string
 function messagesToPrompt(messages) {
@@ -49,6 +57,43 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const chatHandler = async (req, res) => {
     try {
+        const isOpenRouter = process.env.GATEWAY_SERVICE === 'openrouter';
+
+        if (isOpenRouter) {
+            console.log(`[REQ] Forwarding to OpenRouter API`);
+
+            // Allow OpenRouter model fallback if it's not set or set to 'Any'
+            let orModel = req.body.model;
+            if (!orModel || orModel.toLowerCase() === 'any') {
+                orModel = 'openrouter/auto';
+            }
+
+            const openRouterPayload = { ...req.body, model: orModel };
+
+            const axiosConfig = {
+                method: 'post',
+                url: `${OPENROUTER_BASE_URL}/chat/completions`,
+                headers: {
+                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                data: openRouterPayload,
+                responseType: req.body.stream ? 'stream' : 'json'
+            };
+
+            const orResponse = await axios(axiosConfig);
+
+            if (req.body.stream) {
+                res.setHeader('Content-Type', 'text/event-stream');
+                res.setHeader('Cache-Control', 'no-cache');
+                res.setHeader('Connection', 'keep-alive');
+                orResponse.data.pipe(res);
+                return;
+            } else {
+                return res.json(orResponse.data);
+            }
+        }
+
         const {
             messages,
             model,
@@ -194,6 +239,7 @@ app.post('/v1', chatHandler);
 app.post('/', chatHandler);
 
 app.listen(PORT, () => {
-    console.log(`AI Horde JanitorAI Gateway running on http://localhost:${PORT}`);
+    const serviceName = process.env.GATEWAY_SERVICE === 'openrouter' ? 'OpenRouter' : 'AI Horde';
+    console.log(`[${serviceName}] JanitorAI Gateway running on http://localhost:${PORT}`);
     console.log(`Proxy URL for JanitorAI: http://localhost:${PORT}/v1/chat/completions`);
 });

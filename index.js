@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const Joi = require('joi');
 
 const app = express();
 app.use(cors());
@@ -47,16 +48,43 @@ function messagesToPrompt(messages) {
 // Utility to sleep
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+const chatPayloadSchema = Joi.object({
+    messages: Joi.array().items(
+        Joi.object({
+            role: Joi.string().required(),
+            content: Joi.string().required()
+        }).unknown(true)
+    ).required(),
+    model: Joi.string().optional(),
+    temperature: Joi.number().optional().default(0.7),
+    max_tokens: Joi.number().optional().default(500),
+    top_p: Joi.number().optional().default(0.9),
+    stream: Joi.boolean().optional().default(false)
+}).unknown(true);
+
 const chatHandler = async (req, res) => {
     try {
+        const { error, value } = chatPayloadSchema.validate(req.body);
+
+        if (error) {
+            return res.status(400).json({
+                error: {
+                    message: error.details[0].message,
+                    type: 'invalid_request_error',
+                    param: error.details[0].path.join('.'),
+                    code: 'invalid_payload'
+                }
+            });
+        }
+
         const {
             messages,
             model,
-            temperature = 0.7,
-            max_tokens = 500,
-            top_p = 0.9,
-            stream = false
-        } = req.body;
+            temperature,
+            max_tokens,
+            top_p,
+            stream
+        } = value;
 
         // Extract API key from Authorization header or use default
         let apikey = DEFAULT_API_KEY;

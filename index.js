@@ -13,12 +13,15 @@ app.use((req, res, next) => {
     next();
 });
 
+// Pre-compute the mock response object to avoid allocating it and calling Date.now() on every request
+const MOCK_MODELS_RESPONSE = {
+    object: "list",
+    data: [{ id: "aihorde-model", object: "model", created: Date.now(), owned_by: "aihorde" }]
+};
+
 // Mock /v1/models endpoint for clients that check it
 app.get('/v1/models', (req, res) => {
-    res.json({
-        object: "list",
-        data: [{ id: "aihorde-model", object: "model", created: Date.now(), owned_by: "aihorde" }]
-    });
+    res.json(MOCK_MODELS_RESPONSE);
 });
 
 const PORT = process.env.PORT || 3000;

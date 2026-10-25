@@ -193,7 +193,14 @@ app.post('/chat/completions', chatHandler);
 app.post('/v1', chatHandler);
 app.post('/', chatHandler);
 
-app.listen(PORT, () => {
-    console.log(`AI Horde JanitorAI Gateway running on http://localhost:${PORT}`);
-    console.log(`Proxy URL for JanitorAI: http://localhost:${PORT}/v1/chat/completions`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`AI Horde JanitorAI Gateway running on http://localhost:${PORT}`);
+        console.log(`Proxy URL for JanitorAI: http://localhost:${PORT}/v1/chat/completions`);
+    });
+}
+
+module.exports = {
+    app,
+    messagesToPrompt
+};

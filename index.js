@@ -24,6 +24,7 @@ app.get('/v1/models', (req, res) => {
 const PORT = process.env.PORT || 3000;
 const AI_HORDE_BASE_URL = 'https://stablehorde.net/api/v2';
 const DEFAULT_API_KEY = process.env.AI_HORDE_API_KEY || '0000000000';
+const POLL_INTERVAL_MS = 2000;
 
 // Convert OpenAI messages to a single prompt string
 function messagesToPrompt(messages) {
@@ -102,7 +103,7 @@ const chatHandler = async (req, res) => {
         let generatedText = '';
         
         while (!isDone) {
-            await sleep(2000); // Wait 2 seconds between polls
+            await sleep(POLL_INTERVAL_MS); // Wait between polls
             
             const statusResponse = await axios.get(`${AI_HORDE_BASE_URL}/generate/text/status/${jobId}`, {
                 headers: { 'apikey': apikey }

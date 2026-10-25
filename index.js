@@ -27,18 +27,27 @@ const DEFAULT_API_KEY = process.env.AI_HORDE_API_KEY || '0000000000';
 
 // Convert OpenAI messages to a single prompt string
 function messagesToPrompt(messages) {
-    let prompt = '';
-    for (const msg of messages) {
+    if (!messages || messages.length === 0) return '';
+
+    const promptParts = [];
+    for (let i = 0; i < messages.length; i++) {
+        const msg = messages[i];
         if (msg.role === 'system') {
-            prompt += `System: ${msg.content}\n`;
+            promptParts.push('System: ' + msg.content);
         } else if (msg.role === 'user') {
-            prompt += `User: ${msg.content}\n`;
+            promptParts.push('User: ' + msg.content);
         } else if (msg.role === 'assistant') {
-            prompt += `Assistant: ${msg.content}\n`;
+            promptParts.push('Assistant: ' + msg.content);
         }
     }
+
+    let prompt = promptParts.join('\n');
+    if (promptParts.length > 0) {
+        prompt += '\n';
+    }
+
     // Append Assistant: at the end to prompt the model to answer
-    if (messages.length > 0 && messages[messages.length - 1].role !== 'assistant') {
+    if (messages[messages.length - 1].role !== 'assistant') {
         prompt += 'Assistant:';
     }
     return prompt;

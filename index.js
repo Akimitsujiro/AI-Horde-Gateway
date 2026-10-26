@@ -58,6 +58,17 @@ const chatHandler = async (req, res) => {
             stream = false
         } = req.body;
 
+        if (messages !== undefined && !Array.isArray(messages)) {
+            return res.status(400).json({
+                error: {
+                    message: "Invalid input: 'messages' must be an array.",
+                    type: "invalid_request_error",
+                    param: "messages",
+                    code: 400
+                }
+            });
+        }
+
         // Extract API key from Authorization header or use default
         let apikey = DEFAULT_API_KEY;
         const authHeader = req.headers.authorization;
@@ -179,7 +190,7 @@ const chatHandler = async (req, res) => {
         }
         res.status(500).json({
             error: {
-                message: error.message || 'An error occurred during text generation.',
+                message: 'An internal server error occurred.',
                 type: 'server_error',
                 param: null,
                 code: 500

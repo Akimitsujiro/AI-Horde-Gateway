@@ -1,0 +1,4 @@
+## 2024-10-26 - [Missing Input Validation & Error Leakage]
+**Vulnerability:** The application failed to validate if the `messages` array in the request body was actually iterable (an array). If a malformed body was sent, an unhandled `TypeError` occurred, triggering a 500 error response that directly leaked `error.message` to the client, exposing implementation internals (e.g. `messages is not iterable`).
+**Learning:** We must not assume data types based on the expected JSON schema. Unexpected input types can crash internal processes and combined with a generic catch-all that outputs `error.message`, it serves as a vector for leaking backend tech stack details.
+**Prevention:** Always validate critical user input objects or arrays using standard type checks (e.g. `Array.isArray()`) and fail safely with a generic 500 error message (or a clean 400 error message in this case), without bubbling internal exception traces up to the user response.

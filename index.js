@@ -5,7 +5,8 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+// 🛡️ Sentinel: Prevent DoS via large payloads by limiting body size
+app.use(express.json({ limit: '1mb' }));
 
 // Log all incoming requests
 app.use((req, res, next) => {
@@ -57,6 +58,18 @@ const chatHandler = async (req, res) => {
             top_p = 0.9,
             stream = false
         } = req.body;
+
+        // 🛡️ Sentinel: Input validation to ensure messages is an array
+        if (messages !== undefined && !Array.isArray(messages)) {
+            return res.status(400).json({
+                error: {
+                    message: "Invalid input: 'messages' must be an array.",
+                    type: "invalid_request_error",
+                    param: "messages",
+                    code: 400
+                }
+            });
+        }
 
         // Extract API key from Authorization header or use default
         let apikey = DEFAULT_API_KEY;
@@ -177,9 +190,10 @@ const chatHandler = async (req, res) => {
         if (error.response && error.response.data) {
             console.error('[ERROR DETAILS]', error.response.data);
         }
+        // 🛡️ Sentinel: Return a generic error message to prevent information leakage
         res.status(500).json({
             error: {
-                message: error.message || 'An error occurred during text generation.',
+                message: 'An error occurred during text generation.',
                 type: 'server_error',
                 param: null,
                 code: 500

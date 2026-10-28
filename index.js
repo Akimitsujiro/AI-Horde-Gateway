@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const http = require('http');
+const https = require('https');
 
 const app = express();
 app.use(cors());
@@ -24,6 +26,13 @@ app.get('/v1/models', (req, res) => {
 const PORT = process.env.PORT || 3000;
 const AI_HORDE_BASE_URL = 'https://stablehorde.net/api/v2';
 const DEFAULT_API_KEY = process.env.AI_HORDE_API_KEY || '0000000000';
+
+// ⚡ Bolt: Use connection pooling for AI Horde API requests
+// This optimizes connection reuse and skips TLS handshake overhead when repeatedly polling
+const hordeAxios = axios.create({
+    httpAgent: new http.Agent({ keepAlive: true }),
+    httpsAgent: new https.Agent({ keepAlive: true }),
+});
 
 // Convert OpenAI messages to a single prompt string
 function messagesToPrompt(messages) {
@@ -87,7 +96,7 @@ const chatHandler = async (req, res) => {
         console.log(`[REQ] Sending to AI Horde (Model: ${modelList.length > 0 ? modelList[0] : 'Any'})`);
 
         // 1. Submit async request
-        const submitResponse = await axios.post(`${AI_HORDE_BASE_URL}/generate/text/async`, payload, {
+        const submitResponse = await hordeAxios.post(`${AI_HORDE_BASE_URL}/generate/text/async`, payload, {
             headers: {
                 'apikey': apikey,
                 'Content-Type': 'application/json'
@@ -104,7 +113,7 @@ const chatHandler = async (req, res) => {
         while (!isDone) {
             await sleep(2000); // Wait 2 seconds between polls
             
-            const statusResponse = await axios.get(`${AI_HORDE_BASE_URL}/generate/text/status/${jobId}`, {
+            const statusResponse = await hordeAxios.get(`${AI_HORDE_BASE_URL}/generate/text/status/${jobId}`, {
                 headers: { 'apikey': apikey }
             });
 

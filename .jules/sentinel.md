@@ -1,0 +1,4 @@
+## 2026-10-28 - Missing Input Validation and Error Leakage
+**Vulnerability:** The `/v1/chat/completions` endpoint lacked input validation on `req.body.messages`, allowing non-array types to trigger a server-side `TypeError` during iteration, leading to crashes. Additionally, the global catch block exposed the raw `error.message` to clients, potentially leaking internal state.
+**Learning:** In asynchronous handling routes without strict input schemas (like Zod or Joi), relying on assumptions about user payload structures can lead to 500 errors or application crashes. Also, directly returning Node.js error messages in API responses violates the principle of failing securely.
+**Prevention:** Implement strict schema validation (or manual type checking, as done here) on all untrusted input payloads before processing. Ensure global error handlers return generic, non-informative messages to clients while logging the detailed errors securely on the server.

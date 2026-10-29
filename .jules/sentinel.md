@@ -1,0 +1,4 @@
+## 2025-02-23 - [Input Validation and Secure Error Handling in Express APIs]
+**Vulnerability:** Missing array validation for `req.body.messages` could cause a `TypeError` crash. Unsanitized `error.message` was leaked to clients in HTTP 500 responses.
+**Learning:** Application inputs (like the `messages` array for OpenAI-compatible chat endpoints) must be strictly validated because underlying iterator logic (`for const msg of messages`) depends on their structural integrity. Also, leaking `error.message` from generic Try/Catch blocks allows attackers to potentially footprint the app internally.
+**Prevention:** Always manually validate incoming JSON properties (`!Array.isArray(messages)`), and consistently sanitize output by utilizing generic error messages ('An internal server error occurred') while logging the actual details locally.

@@ -1,0 +1,4 @@
+## 2024-05-24 - [Missing Input Validation and Error Leakage]
+**Vulnerability:** The application was missing validation on the `messages` array in the request body, which could lead to TypeErrors or server crashes if non-iterable values were provided. Additionally, the catch block returned internal error messages (e.g., Axios errors) back to the client, leaking internal state information.
+**Learning:** The application lacks a schema validation library and manually handles incoming requests. Missing basic type checks like `Array.isArray` left it vulnerable to malformed inputs. Error handling passed `error.message` to the client instead of a generic response.
+**Prevention:** Always validate incoming request payloads, even manually, to ensure they match expected types before processing. Use generic error messages in API responses and log detailed errors internally to prevent information disclosure.

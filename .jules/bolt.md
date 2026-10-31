@@ -1,0 +1,3 @@
+## 2025-01-25 - Axios Keep-Alive Optimization
+**Learning:** Polling an API repeatedly using the default Axios configuration can create a new TCP connection and perform a new TLS handshake for every request, which introduces significant overhead.
+**Action:** When a Node.js backend needs to poll an external service frequently, configure a custom Axios instance with `http` and `https` agents set to `{ keepAlive: true }` to reuse connections and reduce latency.

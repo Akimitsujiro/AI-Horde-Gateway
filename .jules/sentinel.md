@@ -1,0 +1,4 @@
+## 2024-05-18 - Prevent Error Leakage and Type Error via Input Validation
+**Vulnerability:** Internal system errors and API failures were potentially leaked to the client via `error.message` in the 500 response. Furthermore, `req.body.messages` lacked validation, risking a type error in `messagesToPrompt` if a non-iterable object was passed instead of an array.
+**Learning:** Using default Express error handling directly from a `catch` block often leaks internal stack traces or exact failure strings. Additionally, standard JavaScript requires explicit validation on object fields before treating them as arrays (avoiding reliance on TS/schema libs when they aren't present).
+**Prevention:** Always return a generic error message (e.g. "An internal error occurred...") to clients for unhandled exceptions. In projects without schema validators (like Zod or Joi), manually enforce expected types via `Array.isArray()` and standard JS type checks at the controller boundary.

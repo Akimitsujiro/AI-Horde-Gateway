@@ -1,0 +1,3 @@
+## 2024-11-02 - Reduce TCP/TLS Handshake Overhead in Polling Application
+**Learning:** In applications that rely heavily on high-frequency API polling loops (like querying `stablehorde.net/api/v2`), using the default Axios instance for HTTP requests creates a significant performance bottleneck due to the constant TCP and TLS handshakes for each new connection.
+**Action:** Always create and use a dedicated Axios instance initialized with custom `http` and `https` agents configured with `{ keepAlive: true }`. This enables connection reuse and eliminates unnecessary connection overhead, making repetitive polling measurably faster and more efficient.

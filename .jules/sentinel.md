@@ -1,0 +1,4 @@
+## 2024-05-18 - [Fix Information Exposure and Missing Input Validation]
+**Vulnerability:** The application was exposing `error.message` (from internal Node.js/Axios errors) directly to users in the 500 error response, potentially leaking stack traces or internal info. Also, it did not properly validate that `messages` was an array before iterating over it, risking server crash/unexpected behavior.
+**Learning:** Returning unhandled `error.message` to clients is an information exposure risk. Inputs should always be explicitly validated before processing to ensure expected structure.
+**Prevention:** Catch blocks should return generic, safe error messages to clients (failing securely). Implement explicit type checks (like `Array.isArray`) at the API boundary, even in custom lightweight proxies.

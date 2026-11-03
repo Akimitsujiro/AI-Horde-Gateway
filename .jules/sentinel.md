@@ -1,0 +1,4 @@
+## 2025-02-28 - Missing Input Validation and Error Detail Leakage
+**Vulnerability:** The `/v1/chat/completions` endpoint did not validate the type of `req.body.messages`, allowing non-array inputs that could crash the server (TypeError). Furthermore, the catch block returned internal `error.message` strings directly to the client, leaking internal state on failure.
+**Learning:** The application handles incoming request validation manually to avoid external schema validation dependencies. This manual approach means developers must explicitly remember to check types (e.g., `Array.isArray()`) for all incoming parameters, and fail securely without leaking raw error details.
+**Prevention:** Always validate all incoming user input explicitly, especially types expected by core logic (like arrays for iteration). Ensure all catch blocks log original errors internally but return generic, safe messages to the client (e.g., "An internal server error occurred").

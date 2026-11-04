@@ -1,0 +1,3 @@
+## 2024-05-14 - TCP/TLS Overhead in Polling Architectures
+**Learning:** In applications that rely on frequent API polling (like this AI Horde gateway checking job status every 2 seconds), using default HTTP clients like Axios will create a new TCP connection and perform a full TLS handshake for *every single request*. This introduces massive overhead, significantly increasing the time it takes to get an update and wasting compute resources on both the client and server.
+**Action:** When building gateways or clients that poll APIs frequently, always configure an HTTP/HTTPS Agent with `keepAlive: true` to reuse connections.

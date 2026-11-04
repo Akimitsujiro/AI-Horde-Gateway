@@ -1,0 +1,4 @@
+## 2024-05-18 - Missing Input Validation and Error Leakage in Gateway
+**Vulnerability:** The application was crashing on unexpected input types (e.g., `messages` not being an array or `model` not being a string). Additionally, the default catch block exposed raw JavaScript internal error messages directly to the client (e.g., "messages is not iterable").
+**Learning:** Due to this application serving as a proxy between a client (JanitorAI) and an external service (AI Horde), unexpected inputs can easily bypass external validation and hit our unvalidated API endpoints directly. Returning unhandled exceptions or internal stack errors leaks backend implementation details to potentially malicious clients.
+**Prevention:** Always implement explicit type validation (like `Array.isArray`) for core input variables before they are manipulated. Use a generic server error string in the client response within `catch` blocks, logging the real error internally for debugging.

@@ -1,0 +1,4 @@
+## 2024-11-05 - Fix Error Information Leakage and Missing Input Validation
+**Vulnerability:** The `/v1/chat/completions` endpoint leaked internal error details (`error.message`) to the client on a 500 status code and lacked manual array type validation for the `req.body.messages` property.
+**Learning:** Returning raw internal error details can expose underlying system configurations, dependencies, or sensitive paths. Not validating array types manually can lead to unexpected behavior since standard runtime validation checks (like `messages.length` or iterating using `for...of`) could fail or execute on malicious non-array inputs.
+**Prevention:** Always catch exceptions and return generic error messages to clients while logging detailed errors locally. Explicitly enforce expected parameter types (like using `Array.isArray`) especially when passing complex payload structures further down into critical functions without a schema validator dependency.

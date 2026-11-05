@@ -58,6 +58,18 @@ const chatHandler = async (req, res) => {
             stream = false
         } = req.body;
 
+        // 🛡️ Sentinel: Validate messages array to prevent unexpected behavior
+        if (messages && !Array.isArray(messages)) {
+            return res.status(400).json({
+                error: {
+                    message: 'messages must be an array',
+                    type: 'invalid_request_error',
+                    param: 'messages',
+                    code: 'invalid_type'
+                }
+            });
+        }
+
         // Extract API key from Authorization header or use default
         let apikey = DEFAULT_API_KEY;
         const authHeader = req.headers.authorization;
@@ -177,9 +189,10 @@ const chatHandler = async (req, res) => {
         if (error.response && error.response.data) {
             console.error('[ERROR DETAILS]', error.response.data);
         }
+        // 🛡️ Sentinel: Do not leak internal error messages to the client
         res.status(500).json({
             error: {
-                message: error.message || 'An error occurred during text generation.',
+                message: 'An internal server error occurred.',
                 type: 'server_error',
                 param: null,
                 code: 500

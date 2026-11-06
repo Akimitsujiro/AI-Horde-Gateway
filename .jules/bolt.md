@@ -1,0 +1,3 @@
+## 2025-03-01 - Avoid TLS Handshake Overhead in Frequent Polling
+**Learning:** When using Axios to poll an HTTPS endpoint frequently (e.g., every 2 seconds for a job status), the default Node.js HTTP/HTTPS agents do not reuse connections effectively, causing a new TLS handshake for every request. This adds significant latency and CPU overhead on both the client and server.
+**Action:** Always configure custom `http.Agent` and `https.Agent` with `{ keepAlive: true }` and pass them to a dedicated `axios.create()` instance for frequent polling or high-throughput API communication to reuse established connections.

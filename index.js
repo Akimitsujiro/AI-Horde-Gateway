@@ -49,6 +49,14 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const chatHandler = async (req, res) => {
     try {
+        if (req.body.messages && !Array.isArray(req.body.messages)) {
+            return res.status(400).json({
+                error: {
+                    message: "Invalid input: 'messages' must be an array."
+                }
+            });
+        }
+
         const {
             messages,
             model,
@@ -179,7 +187,7 @@ const chatHandler = async (req, res) => {
         }
         res.status(500).json({
             error: {
-                message: error.message || 'An error occurred during text generation.',
+                message: 'An error occurred during text generation.',
                 type: 'server_error',
                 param: null,
                 code: 500

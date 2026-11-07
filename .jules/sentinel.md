@@ -1,0 +1,4 @@
+## 2024-05-24 - Missing Input Validation on Iterables and Error Leakage
+**Vulnerability:** The application iterated over `req.body.messages` without verifying it was an array, risking unhandled `TypeError`s if a client sent an object. Additionally, the application returned internal error messages directly in the API response `res.status(500).json(...)`.
+**Learning:** Avoiding external schema validators meant basic type validation was omitted, leaving endpoints vulnerable to bad input structures. Returning `error.message` leaks internal execution context to external users.
+**Prevention:** Always implement manual type checking (e.g., `Array.isArray`) at the boundary of request handlers when external schema validators are not used. Always mask internal error messages behind generic, safe responses when sending failure states to clients.

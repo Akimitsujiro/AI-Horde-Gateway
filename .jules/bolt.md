@@ -1,0 +1,3 @@
+## 2024-11-07 - Connection Keep-Alive for Polling API
+**Learning:** Polling an external API (like AI Horde status checks) frequently creates significant TCP and TLS negotiation overhead for every request, slowing down the response cycle.
+**Action:** Create a custom Axios instance using `http.Agent` and `https.Agent` configured with `{ keepAlive: true }` to reuse connections, drastically reducing request latency during repeated polling loops.

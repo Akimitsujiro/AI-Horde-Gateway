@@ -1,0 +1,4 @@
+## 2026-11-09 - Missing Input Validation & Information Exposure
+**Vulnerability:** The application was missing manual input validation for `messages` (assuming it to be an iterable) which could result in internal TypeErrors. Additionally, the error handler leaked internal `error.message` directly in the API response.
+**Learning:** These existed because this application does not use external schema validation dependencies to minimize overhead, meaning we must rely on manual validation steps. Error handlers defaulted to passing on the error object without scrubbing it.
+**Prevention:** Always implement manual type checking (like `Array.isArray()`) for required arrays before attempting to iterate, and always return a hardcoded generic error message in Catch blocks to ensure the API fails securely without exposing internals.

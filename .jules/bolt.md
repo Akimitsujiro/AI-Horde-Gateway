@@ -1,0 +1,3 @@
+## 2025-01-20 - Connection reuse with Axios
+**Learning:** Frequent API polling (like checking AI Horde text generation status) incurs significant performance overhead due to repeated TCP and TLS handshakes for each request when using the default Axios instance.
+**Action:** Use a custom Axios instance configured with `http.Agent({ keepAlive: true })` and `https.Agent({ keepAlive: true })` to reuse connections for repeated requests to the same origin, reducing overhead and improving polling performance.

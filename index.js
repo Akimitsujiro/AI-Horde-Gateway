@@ -58,6 +58,18 @@ const chatHandler = async (req, res) => {
             stream = false
         } = req.body;
 
+        // Security: Validate messages input to prevent unexpected crashes or behavior
+        if (!Array.isArray(messages)) {
+            return res.status(400).json({
+                error: {
+                    message: "Invalid input: 'messages' must be an array.",
+                    type: "invalid_request_error",
+                    param: "messages",
+                    code: "invalid_type"
+                }
+            });
+        }
+
         // Extract API key from Authorization header or use default
         let apikey = DEFAULT_API_KEY;
         const authHeader = req.headers.authorization;
@@ -177,9 +189,10 @@ const chatHandler = async (req, res) => {
         if (error.response && error.response.data) {
             console.error('[ERROR DETAILS]', error.response.data);
         }
+        // Security: Do not leak internal error details (e.g., error.message from Axios) to the client
         res.status(500).json({
             error: {
-                message: error.message || 'An error occurred during text generation.',
+                message: 'An internal error occurred during text generation.',
                 type: 'server_error',
                 param: null,
                 code: 500

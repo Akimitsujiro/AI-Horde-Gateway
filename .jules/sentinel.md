@@ -1,0 +1,4 @@
+## 2024-05-15 - Input Validation and Secure Error Handling
+**Vulnerability:** Missing input type validation for incoming JSON bodies and leaking internal Axios/Express errors back to the client.
+**Learning:** External schemas weren't used to prevent dependency bloat. Because JavaScript handles types loosely, a malformed `messages` property could result in server instability, crashes, or unhandled exceptions when processing. Simultaneously, the `catch` block leaked potentially sensitive internal `error.message` data from backend requests (e.g. Axios timeouts or networking specifics).
+**Prevention:** In this specific application environment, perform manual type and structural assertions on incoming requests (like `Array.isArray(messages)`). Catch blocks must explicitly overwrite external error details with generic standard messaging for the API consumer while preserving detailed logging on the server-side.

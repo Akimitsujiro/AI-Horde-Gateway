@@ -1,0 +1,3 @@
+## 2024-05-24 - KeepAlive for Repeated Polling
+**Learning:** The application polls the AI Horde API every 2 seconds waiting for text generation to finish. By default, Axios creates a new HTTP(S) agent and connection for every request, causing severe connection overhead and potential memory/socket leaks when polling rapidly.
+**Action:** Always create a custom Axios instance with `http.Agent({ keepAlive: true })` and `https.Agent({ keepAlive: true })` when building systems that repeatedly poll external APIs to optimize connection reuse and skip TLS overhead. Ensure the instance is created at the top-level (outside request handlers).

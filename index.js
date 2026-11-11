@@ -58,6 +58,18 @@ const chatHandler = async (req, res) => {
             stream = false
         } = req.body;
 
+        // Security check: validate messages input
+        if (!messages || !Array.isArray(messages)) {
+            return res.status(400).json({
+                error: {
+                    message: 'Invalid request: "messages" must be an array of message objects.',
+                    type: 'invalid_request_error',
+                    param: 'messages',
+                    code: 'invalid_type'
+                }
+            });
+        }
+
         // Extract API key from Authorization header or use default
         let apikey = DEFAULT_API_KEY;
         const authHeader = req.headers.authorization;
@@ -173,13 +185,15 @@ const chatHandler = async (req, res) => {
         }
 
     } catch (error) {
+        // Securely log the full error server-side
         console.error('[ERROR]', error.message);
         if (error.response && error.response.data) {
             console.error('[ERROR DETAILS]', error.response.data);
         }
+        // Fail securely: do not leak error.message to the client
         res.status(500).json({
             error: {
-                message: error.message || 'An error occurred during text generation.',
+                message: 'An internal server error occurred.',
                 type: 'server_error',
                 param: null,
                 code: 500

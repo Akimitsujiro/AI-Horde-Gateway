@@ -2,8 +2,16 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const http = require('http');
+const https = require('https');
 
 const app = express();
+
+// Custom Axios instance with keepAlive to avoid TLS handshake overhead
+const hordeApi = axios.create({
+    httpAgent: new http.Agent({ keepAlive: true }),
+    httpsAgent: new https.Agent({ keepAlive: true })
+});
 app.use(cors());
 app.use(express.json());
 
@@ -87,7 +95,7 @@ const chatHandler = async (req, res) => {
         console.log(`[REQ] Sending to AI Horde (Model: ${modelList.length > 0 ? modelList[0] : 'Any'})`);
 
         // 1. Submit async request
-        const submitResponse = await axios.post(`${AI_HORDE_BASE_URL}/generate/text/async`, payload, {
+        const submitResponse = await hordeApi.post(`${AI_HORDE_BASE_URL}/generate/text/async`, payload, {
             headers: {
                 'apikey': apikey,
                 'Content-Type': 'application/json'
@@ -104,7 +112,7 @@ const chatHandler = async (req, res) => {
         while (!isDone) {
             await sleep(2000); // Wait 2 seconds between polls
             
-            const statusResponse = await axios.get(`${AI_HORDE_BASE_URL}/generate/text/status/${jobId}`, {
+            const statusResponse = await hordeApi.get(`${AI_HORDE_BASE_URL}/generate/text/status/${jobId}`, {
                 headers: { 'apikey': apikey }
             });
 
